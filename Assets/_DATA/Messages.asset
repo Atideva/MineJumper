@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639ea6993d694e26b2d47c3e59693b47, type: 3}
+  m_Name: Messages
+  m_EditorClassIdentifier: 
+  jumpQuality:
+  - qualityType: 0
+    content:
+    - Too early
+    - Before time
+    color: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 0.78039217}
+  - qualityType: 1
+    content:
+    - Good
+    - Nice
+    - Keep it
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - qualityType: 2
+    content:
+    - Perfect
+    - Wow
+    - Amazing
+    color: {r: 0.21568628, g: 1, b: 0, a: 1}
+  - qualityType: 3
+    content:
+    - Oops
+    - Ouch
+    - Oh, no
+    color: {r: 1, g: 0, b: 0, a: 1}
