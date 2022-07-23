@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mr.Cube - Jelly
       objectReference: {fileID: 0}
+    - target: {fileID: 1605486591702263934, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
+      propertyPath: model3D
+      value: 
+      objectReference: {fileID: 8963566243486973652}
     - target: {fileID: 5106698159141597204, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -131,3 +135,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fbdc7a2f722ff9419c3b45ba6c15dd0, type: 3}
+--- !u!4 &8963566243486973652 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2fbdc7a2f722ff9419c3b45ba6c15dd0, type: 3}
+  m_PrefabInstance: {fileID: 8930151512567732543}
+  m_PrefabAsset: {fileID: 0}

@@ -7,89 +7,88 @@ namespace PlayerScripts
     [ExecuteInEditMode]
     public class PlayerJump : MonoBehaviour
     {
-        [Header("Settings")]
-        [SerializeField] float jumpHeight;
-        [SerializeField] float jumpDuration;
-        [Range(0f, 0.3f)]
-        float _landThreshold;
-        [SerializeField] private Transform player;
-
-        Vector3 _startPos, _endPos;
-        private float _jumpDuration, _jumpTime;
-
-        public event Action OnLandAtCube = delegate { };
-        public event Action<float> OnJump = delegate { };
-
-        [field: SerializeField] public bool IsJumping { get; private set; }
-        bool _isLanding;
-        public bool NextJumpAllowed => _isLanding;
-        public bool JumpInProcess => IsJumping && !NextJumpAllowed;
-
-
         [Header("Debug")]
         [Range(0, 1f)] public float jumpProgress;
+        [field: SerializeField] public bool IsJumping { get; private set; }
+        [field: SerializeField] public bool IsRow { get; private set; }
+        public bool IsLand { get; private set; }
+
+        Player _player;
+        Vector3 _startPos, _endPos;
+        float _curJumpHeight;
+        public event Action OnLandAtCube = delegate { };
+        public event Action<float> OnJumpFinish = delegate { };
 
 
-        public void Init(float landThreshold)
+        public void Init(Player player)
         {
-            _landThreshold = landThreshold;
+            _player = player;
+            IsLand = true;
         }
 
-        private void Update()
+        void Update()
         {
             if (IsJumping)
             {
-                _jumpTime += Time.deltaTime;
-                jumpProgress = _jumpTime / _jumpDuration;
+                jumpProgress += Time.deltaTime * _player.Speed;
 
-                if (jumpProgress >= 1 + _landThreshold)
+                if (jumpProgress >= 1 + _player.LandThreshold)
                 {
-                    IsJumping = false;
+                    Stop();
                 }
 
-                CheckIsLand();
+                CheckLand();
                 Move(jumpProgress);
             }
         }
 
-        void CheckIsLand()
+        void CheckLand()
         {
-            if (_isLanding) return;
+            if (IsLand) return;
 
-            var land = 1f - _landThreshold;
+            var land = 1f - _player.LandThreshold;
 
             if (jumpProgress >= land)
             {
-                _isLanding = true;
+                IsLand = true;
                 OnLandAtCube();
             }
         }
 
-        public void Jump(Vector3 targetPos, float spdMult)
+        void Stop()
         {
-            OnJump(jumpProgress);
-
-            IsJumping = true;
-            _isLanding = false;
-
-            if (spdMult <= 0)
-            {
-                spdMult = 0.1f;
-                Debug.LogError("Your speed multiplier is below 0. It this legal?");
-            }
-
-            _jumpTime = 0;
-            _jumpDuration = jumpDuration / spdMult;
-            _startPos = player.position;
-            _endPos = targetPos;
+            StopLastJump();
+            IsRow = false;
+            IsJumping = false;
         }
 
+        public void StopLastJump()
+        {
+            if (IsJumping)
+                OnJumpFinish(jumpProgress);
+        }
+
+        public void NextJump(Vector3 targetPos)
+        {
+            if (IsJumping)
+            {
+                IsRow = true;
+            }
+
+            IsJumping = true;
+            IsLand = false;
+
+            jumpProgress = 0;
+            _startPos = _player.transform.position;
+            _endPos = targetPos;
+            _curJumpHeight = _player.JumpHeight;
+        }
 
 
         void Move(float progress)
         {
             progress = Mathf.Clamp01(progress);
-            player.position = MathParabola.Parabola(_startPos, _endPos, jumpHeight, progress);
+            _player.transform.position = ParabolaMath.Parabola(_startPos, _endPos, _curJumpHeight, progress);
         }
     }
 }

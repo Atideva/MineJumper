@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mr. Grass Flat
       objectReference: {fileID: 0}
+    - target: {fileID: 1605486591702263934, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
+      propertyPath: model3D
+      value: 
+      objectReference: {fileID: 3513462179082615152}
     - target: {fileID: 5106698159141597204, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -91,15 +95,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4500155699262478, guid: 237882a1794f81e4590fccce69da1926, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4500155699262478, guid: 237882a1794f81e4590fccce69da1926, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4500155699262478, guid: 237882a1794f81e4590fccce69da1926, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4500155699262478, guid: 237882a1794f81e4590fccce69da1926, type: 3}
       propertyPath: m_LocalPosition.x
@@ -143,3 +147,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 237882a1794f81e4590fccce69da1926, type: 3}
+--- !u!4 &3513462179082615152 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4500155699262478, guid: 237882a1794f81e4590fccce69da1926, type: 3}
+  m_PrefabInstance: {fileID: 3516660272433352062}
+  m_PrefabAsset: {fileID: 0}

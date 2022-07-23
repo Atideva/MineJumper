@@ -15,22 +15,26 @@ MonoBehaviour:
   jumpQuality:
   - qualityType: 0
     content:
+    - Let's start
+    color: {r: 0.6313726, g: 0.6313726, b: 0.6313726, a: 0.78039217}
+  - qualityType: 1
+    content:
     - Too early
     - Before time
     color: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 0.78039217}
-  - qualityType: 1
+  - qualityType: 2
     content:
     - Good
     - Nice
     - Keep it
     color: {r: 1, g: 1, b: 1, a: 1}
-  - qualityType: 2
+  - qualityType: 3
     content:
     - Perfect
     - Wow
     - Amazing
     color: {r: 0.21568628, g: 1, b: 0, a: 1}
-  - qualityType: 3
+  - qualityType: 4
     content:
     - Oops
     - Ouch

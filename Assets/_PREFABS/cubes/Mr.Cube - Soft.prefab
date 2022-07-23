@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mr.Cube - Soft
       objectReference: {fileID: 0}
+    - target: {fileID: 1605486591702263934, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
+      propertyPath: model3D
+      value: 
+      objectReference: {fileID: 5955075066813208901}
     - target: {fileID: 5106698159141597204, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -123,3 +127,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01d009085983f094881370e8232042ff, type: 3}
+--- !u!4 &5955075066813208901 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 01d009085983f094881370e8232042ff, type: 3}
+  m_PrefabInstance: {fileID: 6137865631666716334}
+  m_PrefabAsset: {fileID: 0}

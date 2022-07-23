@@ -1,24 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!95 &2060500465
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593459031659306760}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: aad456bea1424b54caa76fa081a14a2a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &9156749832105605990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3463778787022381906, guid: 3394c1424701f3545a939375e51f7e63, type: 3}
+      propertyPath: model3D
+      value: 
+      objectReference: {fileID: 249865618503534002}
     - target: {fileID: 3654431608323756161, guid: 3394c1424701f3545a939375e51f7e63, type: 3}
       propertyPath: m_Name
       value: Mr.Cube - Jelly Animated
@@ -76,8 +61,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3394c1424701f3545a939375e51f7e63, type: 3}
+--- !u!4 &249865618503534002 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8963566243486973652, guid: 3394c1424701f3545a939375e51f7e63, type: 3}
+  m_PrefabInstance: {fileID: 9156749832105605990}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &593459031659306760 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8588132138057557102, guid: 3394c1424701f3545a939375e51f7e63, type: 3}
   m_PrefabInstance: {fileID: 9156749832105605990}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &2060500465
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593459031659306760}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aad456bea1424b54caa76fa081a14a2a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -1,34 +1,37 @@
-using System;
+using Configs;
 using UnityEngine;
 
-public class PlayerSpeedBoost : MonoBehaviour
+namespace PlayerScripts
 {
-    [SerializeField] [Range(0, 5)] float minMult = 1;
-    [SerializeField] [Range(0, 5)] float maxMult = 1;
-    [SerializeField] int jumpCountToMaxSpeed;
-
-    float _speedMult;
-    int _currentRow;
-
-    private void Awake()
+    public class PlayerSpeedBoost : MonoBehaviour
     {
-        _speedMult = minMult;
-    }
-
-    public float SpeedMult => _speedMult;
-    public float SpeedFactor => jumpCountToMaxSpeed > 0 ? (float) _currentRow / jumpCountToMaxSpeed : 0;
-    public void IncreaseBoost()
-    {
-        _currentRow++;
-
  
-        var bonus = (maxMult - minMult) * SpeedFactor;
-        _speedMult = minMult + bonus;
-    }
+    
+        [Header("DEBUG")]
+        [SerializeField] float _speedMult;
+        [SerializeField] int _currentRow;
+          PlayerConfig _config;
 
-    public void ResetBoost()
-    {
-        _currentRow = 0;
-        _speedMult = minMult;
+        public void Init(PlayerConfig config)
+        {
+            _config = config;
+            _speedMult = 1;
+        }
+ 
+        public float SpeedMult => _speedMult;
+        public float BoostValue => _config.JumpsToMaxSpeed > 0 ? (float) _currentRow / _config.JumpsToMaxSpeed : 0;
+        public void Increase()
+        {
+            _currentRow++;
+
+            var bonus = (_config.SpeedBoostFactor - 1) * BoostValue;
+            _speedMult = 1 + bonus;
+        }
+
+        public void Reset()
+        {
+            _currentRow = 0;
+            _speedMult = 1;
+        }
     }
 }

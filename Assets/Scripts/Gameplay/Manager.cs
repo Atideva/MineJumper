@@ -1,7 +1,14 @@
 using System.Collections;
+using Configs;
+using Curves;
+using Jump;
+using Misc;
 using PlayerScripts;
+using Spawn;
+using UI;
 using UnityEngine;
-using UnityEngine.UI;
+
+
 
 namespace Gameplay
 {
@@ -14,93 +21,84 @@ namespace Gameplay
         [SerializeField] private float curveHeight;
         [SerializeField] private float curveWidth;
 
-        [Header("Setup")]
-        [SerializeField] private GameConfig config;
-        [SerializeField] private Transform startPos;
+        [Header("Spawn")]
         [SerializeField] private Cube spawnPrefab;
+        [SerializeField] private Vector3 spawnPrefabScale = Vector3.one;
+        [SerializeField] private float spawnPadding;
+        [SerializeField] private Vector3 spawnDirection;
+        [SerializeField] private Transform spawnPos;
+
+        [Header("Player")]
         [SerializeField] private Player playerOnScene;
         [SerializeField] private Player playerPrefab;
+        [SerializeField] private Controller playerController;
+
+        [Header("UI")]
+        [SerializeField] private JumpQualityUI jumpQualityUI;
+        [SerializeField] private SpeedBoostUI speedBoostUI;
+        [SerializeField] private LivesUI livesUI;
+        [SerializeField] private ScreenVfxUI screenVfxUI;
+
+        [Header("Setup")]
+        [SerializeField] private GameConfig config;
         [SerializeField] private Spawner spawner;
-        [SerializeField] private Pool pool;
+        [SerializeField] private SpawnPool spawnPool;
         [SerializeField] private Curve curves;
-        [SerializeField] private SpawnerLocator spawnLocator;
-        [SerializeField] private CubeList cubeList;
-        [SerializeField] private JumpMessage jumpMessage;
-        [SerializeField] private Slider speedSlider;
-        [SerializeField] private JumpQuality jumpQuality;
+        [SerializeField] private SpawnLocator spawnLocator;
+        [SerializeField] private SpawnList spawnList;
+        [SerializeField] private SpawnID spawnIDs;
 
-        [Header("Debug")]
+        Cube _currentSpawnPrefab;
+
+
+        [Header("DEBUG")]
         [SerializeField] private int cubeId;
-
-        [Header("Test")]
         public bool testSpawn;
         bool _test;
 
-        private Player _player;
+        Player _player;
 
         void Start()
         {
             if (!Application.isPlaying)
                 return;
 
-            InitComponents();
-            InitPlayer();
+            // _currentSpawnPrefab = spawnPrefab;
+            Init();
             Subscribe();
             AutoSpawn();
         }
 
         void Subscribe()
         {
-            spawner.OnCubeSpawned += OnCubeSpawn;
-            _player.Jump.OnJump += OnJump;
             _player.Jump.OnLandAtCube += OnLandAtCube;
-        }
-
-        void OnCubeSpawn(Cube cube)
-        {
-            cube.SetID(++cubeId);
-            cubeList.Add(cube);
-        }
-
-         void OnJump(float lastJumpProgress)
-        {
-            var quality = jumpQuality.GetQuality(lastJumpProgress);
-            SpawnJumpMessage(quality);
-            RefreshSpeedSlider();
         }
 
         void OnLandAtCube()
         {
-            cubeList.Dequeue();
-
-            if (spawnLocator.IsNewDataRequire)
-            {
-                spawnLocator.SetData(GetLocatorData());
-            }
-
-            spawnLocator.NextStep();
-            spawner.Spawn(spawnLocator.GetPos());
+            SpawnNextCube();
+            if (_player.CurrentCubeId < 2) return;
+            spawnList.DestroyLastCube();
         }
 
-        void InitPlayer()
+
+
+        void Init()
         {
             _player = playerOnScene ? playerOnScene : Instantiate(playerPrefab);
-            _player.Init(cubeList, startPos.position, config.Jump.LandThreshold);
-        }
-
-
-        void InitComponents()
-        {
-            cubeId = -1;
-            speedSlider.value = 0;
-
-            pool.Init(spawnPrefab);
-            spawner.Init(pool);
-            jumpQuality.Init(config.Jump);
-
-            var locatorData = GetLocatorData();
-            locatorData.startPos = startPos.position;
-            spawnLocator.SetData(locatorData);
+            _player.Init(spawnPos.position, spawnPrefab.GetTopY(spawnPrefabScale), spawnList);
+            playerController.Init(_player);
+            
+            jumpQualityUI.Init(config,_player);
+            speedBoostUI.Init(_player.DangerSpeedFactor, _player);
+            livesUI.Init(_player);
+            screenVfxUI.Init(_player);
+            
+            spawnPool.Init(spawnPrefab);
+            spawner.Init(spawnPool, spawnPrefabScale);
+            spawnIDs.Init(spawner);
+            spawnList.Init(spawner);
+            spawnLocator.Init(spawnPadding, spawnDirection, GetNextCurve());
         }
 
 
@@ -110,16 +108,16 @@ namespace Gameplay
             if (!Application.isPlaying)
             {
                 if (playerOnScene)
-                    playerOnScene.transform.position = startPos.position + new Vector3(0, 1, 0);
+                    playerOnScene.transform.position = spawnPos.position + new Vector3(0, 1, 0);
             }
 
             if (testSpawn)
             {
                 testSpawn = false;
 
-                if (spawnLocator.IsNewDataRequire)
+                if (spawnLocator.IsEndOfCurve)
                 {
-                    spawnLocator.SetData(GetLocatorData());
+                    spawnLocator.SetCurve(GetNextCurve());
                 }
 
                 if (!_test)
@@ -131,66 +129,68 @@ namespace Gameplay
                     spawnLocator.NextStep();
                 }
 
-                var pos = spawnLocator.GetPos();
+                var pos = spawnLocator.Position;
                 spawner.Spawn(pos);
             }
         }
 #endif
-        
+
         void AutoSpawn() => StartCoroutine(AutoSpawnRoutine(autoSpawnCount));
 
         IEnumerator AutoSpawnRoutine(int spawnCount)
         {
-            var pos0 = spawnLocator.GetPos();
-            spawner.Spawn(pos0);
+            spawner.Spawn(spawnLocator.Position); // first position
             yield return null;
 
             for (var i = 1; i < spawnCount; i++)
             {
                 spawnLocator.NextStep();
-                var pos = spawnLocator.GetPos();
-                spawner.Spawn(pos);
+                spawner.Spawn(spawnLocator.Position);
                 yield return null;
             }
         }
 
 
 
-        void RefreshSpeedSlider()
-        {
-            var spdBoost = _player.SpeedBoostFactor;
-            speedSlider.value = spdBoost;
-            Debug.Log("Speed boost factor: " + spdBoost);
-        }
-
-        void SpawnJumpMessage(JumpQualityType quality)
-        {
-            var jumpData = config.Messages.GetJumpData(quality);
-            var r = Random.Range(0, jumpData.content.Count);
-            var text = jumpData.content[r];
-            var color = jumpData.color;
-
-            jumpMessage.Spawn(text, color);
-        }
-
         void OnDrawGizmos()
         {
             Gizmos.color = Color.black;
-            Gizmos.DrawWireCube(startPos.position, Vector3.one);
+            Gizmos.DrawWireCube(spawnPos.position, Vector3.one);
         }
 
-        SpawnerLocatorData GetLocatorData()
+        void SpawnNextCube()
         {
-            var locatorData = new SpawnerLocatorData
+            if (spawnLocator.IsEndOfCurve)
             {
-                height = curves.GetHeightCurve(),
-                direction = curves.GetDirectionCurve(),
-                maxHeight = curveHeight,
-                maxWidth = curveWidth,
-                totalSteps = cubesPerCurve,
-                startPos = cubeList.GetLastCube() ? cubeList.GetLastCube().transform.position : Vector3.zero
-            };
-            return locatorData;
+                spawnLocator.SetCurve(GetNextCurve());
+            }
+
+            spawnLocator.NextStep();
+            spawner.Spawn(spawnLocator.Position);
         }
+
+        CurveData GetNextCurve() => new CurveData()
+            .With(c => c.height = curves.GetHeightCurve())
+            .With(c => c.direction = curves.GetDirectionCurve())
+            .With(c => c.maxHeight = curveHeight)
+            .With(c => c.maxWidth = curveWidth)
+            .With(c => c.totalSteps = cubesPerCurve)
+            .With(c => c.startPos =
+                spawnList.GetLastCube() ? spawnList.GetLastCube().transform.position : spawnPos.position);
+
+
+        // CurveData GetNextCurve()
+        // {
+        //     var locatorData = new CurveData
+        //     {
+        //         height = curves.GetHeightCurve(),
+        //         direction = curves.GetDirectionCurve(),
+        //         maxHeight = curveHeight,
+        //         maxWidth = curveWidth,
+        //         totalSteps = cubesPerCurve,
+        //         startPos = cubeList.GetLastCube() ? cubeList.GetLastCube().transform.position : Vector3.zero
+        //     };
+        //     return locatorData;
+        // }
     }
 }

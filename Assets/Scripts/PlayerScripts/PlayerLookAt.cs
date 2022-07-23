@@ -6,6 +6,7 @@ namespace PlayerScripts
     {
         [SerializeField] private float rotSpeed;
         [SerializeField] private int lookForwardBy;
+        [SerializeField] private Vector3 offset;
         private float _timer;
         private Transform _target;
         public int LookForwardBy => lookForwardBy;
@@ -29,7 +30,7 @@ namespace PlayerScripts
             }
         
             _timer += Time.deltaTime * rotSpeed;
-            var look = Quaternion.LookRotation(_target.position - transform.position);
+            var look = Quaternion.LookRotation((_target.position +offset) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, look, _timer);
         }
     }

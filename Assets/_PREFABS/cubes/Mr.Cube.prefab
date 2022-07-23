@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1543414107845531742}
   m_RootOrder: 0
@@ -93,6 +94,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mr.Cube
       objectReference: {fileID: 0}
+    - target: {fileID: 1605486591702263934, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
+      propertyPath: model3D
+      value: 
+      objectReference: {fileID: 2604226037247096532}
     - target: {fileID: 5106698159141597204, guid: 7b69d327e949b5c449d16d6a0bccd5b3, type: 3}
       propertyPath: m_RootOrder
       value: 0
